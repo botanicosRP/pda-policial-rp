@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDA | Botánicos RP</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg:#080d16; --panel:#111b2b; --line:#293950;
+  --blue:#2879ed; --text:#f1f5fb; --muted:#9aacc3;
+}
+* { box-sizing:border-box }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font:16px system-ui,-apple-system,sans-serif;
+}
+header {
+  padding:24px 18px; background:#101b2c;
+  border-bottom:1px solid var(--line);
+}
+.brand { color:#6aa6ff; font-size:12px; letter-spacing:2px }
+h1 { margin:7px 0; font-size:25px }
+header p { margin:0; color:var(--muted); font-size:13px }
+main { max-width:650px; margin:auto; padding:17px }
+.notice {
+  border:1px solid #6a5225; background:#241d10;
+  padding:12px; border-radius:10px; color:#f4d38c;
+  font-size:13px; margin-bottom:17px;
+}
+nav { display:grid; grid-template-columns:repeat(2,1fr); gap:9px }
+button {
+  border:1px solid var(--line); background:#19263a;
+  color:var(--text); border-radius:10px; padding:12px;
+  font:inherit; cursor:pointer;
+}
+button.active, .primary { background:var(--blue); border-color:var(--blue) }
+section {
+  margin-top:17px; padding:17px; border:1px solid var(--line);
+  border-radius:14px; background:var(--panel);
+}
+h2 { font-size:19px; margin:0 0 14px }
+label { display:block; font-size:13px; color:var(--muted); margin:12px 0 5px }
+input, select, textarea {
+  width:100%; padding:12px; border:1px solid var(--line);
+  background:#080f1c; color:white; border-radius:8px; font:inherit;
+}
+textarea { min-height:75px; resize:vertical }
+.full { width:100%; margin-top:15px }
+.small { color:var(--muted); font-size:12px; line-height:1.5 }
+.hidden { display:none }
+.result {
+  border-bottom:1px solid var(--line); padding:12px 0;
+  overflow-wrap:anywhere;
+}
+.tag { color:#8ab7ff; font-size:12px }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">SISTEMA DE INFORMACIÓN POLICIAL</div>
+  <h1>🚔 BOTÁNICOS RP</h1>
+  <p>Terminal de datos policiales · GTA 5 Roleplay</p>
+</header>
+
+<main>
+  <div class="notice">
+    DEMOSTRACIÓN: los registros se guardan únicamente en este navegador.
+    No introduzcas datos reales ni contraseñas. Aún no es una PDA privada.
+  </div>
+
+  <nav>
+    <button class="active" data-tab="registro">👤 Registro RP</button>
+    <button data-tab="buscar">🔎 Buscar ciudadanos</button>
+    <button data-tab="vehiculos">🚘 Vehículos</button>
+    <button data-tab="multas">🧾 Multas</button>
+  </nav>
+
+  <section id="registro">
+    <h2>Alta de ciudadano</h2>
+    <form id="personForm">
+      <label>Nombre y apellidos del personaje *</label>
+      <input name="nombre" required maxlength="70" placeholder="Ej. Alex García">
+      <label>Fecha de nacimiento ficticia *</label>
+      <input name="nacimiento" type="date" required>
+      <label>Identificador del personaje</label>
+      <input name="idrp" maxlength="30" placeholder="Ej. RP-001">
+      <label>Profesión dentro del roleplay</label>
+      <input name="profesion" maxlength="60" placeholder="Ej. Mecánico">
+      <label>Teléfono ficticio</label>
+      <input name="telefono" maxlength="25" placeholder="Teléfono del personaje">
+      <label>Notas de roleplay</label>
+      <textarea name="notas" maxlength="500" placeholder="Información ficticia pertinente"></textarea>
+      <button class="primary full">Guardar personaje</button>
+    </form>
+    <p class="small">Usa exclusivamente identidades inventadas para GTA RP.</p>
+  </section>
+
+  <section id="buscar" class="hidden">
+    <h2>Base de ciudadanos</h2>
+    <input id="personSearch" placeholder="Buscar por nombre o ID...">
+    <div id="peopleResults"></div>
+  </section>
+
+  <section id="vehiculos" class="hidden">
+    <h2>Registro de vehículos</h2>
+    <form id="carForm">
+      <label>Matrícula ficticia *</label>
+      <input name="matricula" required maxlength="20">
+      <label>Marca y modelo *</label>
+      <input name="modelo" required maxlength="70">
+      <label>Color</label>
+      <input name="color" maxlength="30">
+      <label>Propietario (nombre RP)</label>
+      <input name="propietario" maxlength="70">
+      <button class="primary full">Guardar vehículo</button>
+    </form>
+    <label>Buscar matrícula</label>
+    <input id="carSearch" placeholder="Escribe una matrícula...">
+    <div id="carResults"></div>
+  </section>
+
+  <section id="multas" class="hidden">
+    <h2>Registro de multas</h2>
+    <form id="fineForm">
+      <label>Ciudadano (nombre RP) *</label>
+      <input name="ciudadano" required maxlength="70">
+      <label>Motivo *</label>
+      <input name="motivo" required maxlength="160">
+      <label>Importe ficticio ($) *</label>
+      <input name="importe" type="number" min="0" max="1000000" required>
+      <label>Agente (nombre RP)</label>
+      <input name="agente" maxlength="70">
+      <button class="primary full">Registrar multa</button>
+    </form>
+    <div id="fineResults"></div>
+  </section>
+
+  <section>
+    <h2>Estado del sistema</h2>
+    <p id="status">Preparando sistema...</p>
+    <p class="small">
+      Esta versión es una maqueta local. Borrar los datos del navegador
+      puede eliminarlos. No sincroniza registros entre distintos móviles.
+    </p>
+    <button id="exportBtn">Exportar copia JSON</button>
+    <button id="clearBtn">Borrar todos los registros</button>
+  </section>
+</main>
+
+<script>
+const KEY = "botanicosrp_pda_demo_v1";
+const emptyDB = () => ({people:[],cars:[],fines:[]});
+let db = emptyDB();
+
+try {
+  const saved = localStorage.getItem(KEY);
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    if (parsed && Array.isArray(parsed.people) &&
+        Array.isArray(parsed.cars) && Array.isArray(parsed.fines)) db = parsed;
+  }
+} catch {}
+
+function persist() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(db));
+    document.getElementById("status").textContent =
+      `Guardado en este navegador · ${db.people.length} personajes · ` +
+      `${db.cars.length} vehículos · ${db.fines.length} multas`;
+    return true;
+  } catch {
+    alert("No se pudieron guardar los datos en este navegador.");
+    return false;
+  }
+}
+
+function values(form) {
+  return Object.fromEntries(new FormData(form).entries());
+}
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[c]);
+}
+function id() {
+  return "RP-" + Date.now().toString(36).toUpperCase() +
+    Math.random().toString(36).slice(2,5).toUpperCase();
+}
+function card(title, lines) {
+  return `<div class="result"><strong>${esc(title)}</strong>${lines.map(
+    x => `<div>${esc(x)}</div>`).join("")}</div>`;
+}
+
+document.querySelectorAll("[data-tab]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("main > section[id]").forEach(s =>
+      s.classList.toggle("hidden", s.id !== btn.dataset.tab));
+    document.querySelectorAll("[data-tab]").forEach(b =>
+      b.classList.toggle("active", b === btn));
+  });
+});
+
+document.getElementById("personForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const p = values(e.currentTarget);
+  p.id = p.idrp.trim() || id();
+  if (db.people.some(x => x.id.toLowerCase() === p.id.toLowerCase())) {
+    alert("Ese identificador ya existe. Usa otro.");
+    return;
+  }
+  db.people.push(p);
+  if (persist()) {
+    e.currentTarget.reset();
+    alert("Personaje guardado en este navegador.");
+  }
+  renderPeople();
+});
+
+function renderPeople() {
+  const q = document.getElementById("personSearch").value.toLowerCase();
+  document.getElementById("peopleResults").innerHTML =
+    db.people.filter(p => [p.nombre,p.id].some(x =>
+      (x || "").toLowerCase().includes(q)))
+    .map(p => card(p.nombre, [
+      "ID: " + p.id,
+      "Nacimiento: " + p.nacimiento,
+      "Profesión: " + p.profesion,
+      "Teléfono RP: " + p.telefono,
+      "Notas: " + p.notas
+    ])).join("") || "<p class='small'>No hay resultados.</p>";
+}
+document.getElementById("personSearch").addEventListener("input", renderPeople);
+
+document.getElementById("carForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const c = values(e.currentTarget);
+  c.matricula = c.matricula.trim().toUpperCase();
+  if (db.cars.some(x => x.matricula === c.matricula)) {
+    alert("Esa matrícula ya está registrada.");
+    return;
+  }
+  db.cars.push(c);
+  if (persist()) e.currentTarget.reset();
+  renderCars();
+});
+function renderCars() {
+  const q = document.getElementById("carSearch").value.toLowerCase();
+  document.getElementById("carResults").innerHTML =
+    db.cars.filter(c => [c.matricula,c.modelo,c.propietario].some(x =>
+      (x || "").toLowerCase().includes(q)))
+    .map(c => card(c.matricula, [
+      "Vehículo: " + c.modelo, "Color: " + c.color,
+      "Propietario RP: " + c.propietario
+    ])).join("") || "<p class='small'>No hay vehículos.</p>";
+}
+document.getElementById("carSearch").addEventListener("input", renderCars);
+
+document.getElementById("fineForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = values(e.currentTarget);
+  f.id = id();
+  db.fines.push(f);
+  if (persist()) e.currentTarget.reset();
+  renderFines();
+});
+function renderFines() {
+  document.getElementById("fineResults").innerHTML =
+    db.fines.map(f => card(f.ciudadano, [
+      "Multa: " + f.motivo,
+      "Importe ficticio: $" + f.importe,
+      "Agente RP: " + f.agente,
+      "Referencia: " + f.id
+    ])).join("") || "<p class='small'>Todavía no hay multas.</p>";
+}
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(db,null,2)],
+    {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "botanicosrp-pda-copia.json";
+  a.click(); URL.revokeObjectURL(url);
+});
+document.getElementById("clearBtn").addEventListener("click", () => {
+  if (!confirm("¿Borrar todos los registros locales de esta PDA?")) return;
+  db = emptyDB();
+  try { localStorage.removeItem(KEY); } catch {}
+  persist(); renderPeople(); renderCars(); renderFines();
+});
+persist(); renderPeople(); renderCars(); renderFines();
+</script>
+</body>
+</html>
