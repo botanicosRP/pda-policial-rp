@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti 💖</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Georgia, serif;
+  color: #b33e70;
+  text-align: center;
+  background: linear-gradient(145deg, #ffe4ef, #fff8fb, #ffd5e6);
+}
+
+.corazon-flotante {
+  position: fixed;
+  bottom: -40px;
+  pointer-events: none;
+  z-index: 10;
+  animation: subir 6s linear forwards;
+}
+
+@keyframes subir {
+  to {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
+}
+
+.pantalla {
+  min-height: 100vh;
+  padding: 30px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.tarjeta {
+  width: 100%;
+  max-width: 490px;
+  padding: 28px 20px;
+  border: 2px solid white;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.86);
+  box-shadow: 0 8px 30px #e9a4c555;
+}
+
+h1 {
+  font-size: clamp(30px, 8vw, 42px);
+}
+
+.texto {
+  font-size: 17px;
+  line-height: 1.9;
+}
+
+.boton {
+  margin: 10px 4px;
+  padding: 14px 22px;
+  border: none;
+  border-radius: 30px;
+  background: #e96b9b;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.boton:hover {
+  transform: scale(1.04);
+}
+
+#juego {
+  display: none;
+}
+
+#mapa {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 3px;
+  padding: 7px;
+  margin: 20px 0;
+  background: #f4c9d9;
+  border-radius: 16px;
+}
+
+.celda {
+  min-width: 0;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #fff9fc;
+  font-size: clamp(15px, 4.5vw, 23px);
+}
+
+.pared {
+  background: #d88caf;
+}
+
+.visitada {
+  background: #f5a8c8;
+}
+
+.casa {
+  background: #ffcfdf;
+}
+
+.controles button {
+  width: 58px;
+  height: 48px;
+  margin: 4px;
+  border: none;
+  border-radius: 13px;
+  background: #e96b9b;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+#mensaje-juego {
+  line-height: 1.8;
+}
+</style>
+</head>
+
+<body>
+
+<!-- CARTA DE AMOR -->
+<section id="carta" class="pantalla">
+  <div class="tarjeta">
+
+    <div style="font-size:30px">💖 💖 💖</div>
+
+    <h1>Para mi niña bonita 💖</h1>
+
+    <p class="texto">
+      Mi amor, he querido hacerte algo especial,
+      algo que sea solo nuestro. 💖
+      <br><br>
+      Aunque a veces estemos lejos, quiero que recuerdes
+      que eres una de las personas más bonitas que han
+      llegado a mi vida.
+      <br><br>
+      Si pudiera pedir un deseo ahora mismo, sería estar
+      a tu lado, abrazarte muy fuerte y quedarme contigo
+      un ratito más.
+      <br><br>
+      Puede que no siempre podamos estar cerquita,
+      pero eso no cambia lo muchísimo que significas
+      para mí. Quiero seguir compartiendo risas, momentos
+      bonitos y recuerdos contigo.
+      <br><br>
+      Y si tuviera que recorrer cualquier camino para
+      volver a encontrarte, lo haría una y mil veces.
+      Porque mi lugar favorito siempre será donde estés tú.
+      💖
+    </p>
+
+    <p class="texto">
+      Te he preparado una pequeña sorpresa...
+    </p>
+
+    <button class="boton" onclick="abrirJuego()">
+      Vamos a encontrarnos 💖
+    </button>
+
+  </div>
+</section>
+
+<!-- JUEGO DEL CAMINO -->
+<section id="juego" class="pantalla">
+  <div class="tarjeta">
+
+    <h1>Hasta encontrarnos 💖</h1>
+
+    <p class="texto">
+      Tú estás en tu casita y yo en la mía.
+      Encuentra el camino para llegar hasta mí.
+      ¡Tenemos que reunirnos! 
+    </p>
+
+    <div style="display:flex;justify-content:space-around;gap:6px">
+      <span>Tu casa</span>
+      <span>Nuestro camino</span>
+      <span>Mi casa</span>
+    </div>
+
+    <div id="mapa"></div>
+
+    <p id="mensaje-juego">
+      Cada pasito nos acerca más. 💖
+    </p>
+
+    <div class="controles">
+      <div>
+        <button onclick="mover(0,-1)">⬆</button>
+      </div>
+      <div>
+        <button onclick="mover(-1,0)">⬅</button>
+        <button onclick="mover(0,1)">⬇</button>
+        <button onclick="mover(1,0)">➡</button>
+      </div>
+    </div>
+
+    <p>Usa los botones o las flechas de tu teclado.</p>
+
+    <button class="boton" onclick="reiniciar()">
+      Volver a jugar
+    </button>
+
+    <br>
+
+    <button class="boton" onclick="volverCarta()">
+      Volver a la carta
+    </button>
+
+  </div>
+</section>
+
+<script>
+// Corazones flotantes: solo 💖
+function crearCorazon() {
+  const corazon = document.createElement("span");
+
+  corazon.className = "corazon-flotante";
+  corazon.textContent = "💖";
+  corazon.style.left = Math.random() * 100 + "vw";
+  corazon.style.fontSize = (18 + Math.random() * 15) + "px";
+  corazon.style.animationDuration = (4 + Math.random() * 3) + "s";
+
+  document.body.appendChild(corazon);
+
+  setTimeout(() => corazon.remove(), 7000);
+}
+
+setInterval(crearCorazon, 500);
+
+// Cambiar de pantalla
+function abrirJuego() {
+  document.getElementById("carta").style.display = "none";
+  document.getElementById("juego").style.display = "flex";
+  reiniciar();
+}
+
+function volverCarta() {
+  document.getElementById("juego").style.display = "none";
+  document.getElementById("carta").style.display = "flex";
+}
+
+// Mapa: los # son obstáculos
+const plano = [
+  ".........",
+  ".##...##.",
+  "...#.#...",
+  ".#.....#.",
+  "...#.#...",
+  ".##...##.",
+  "........."
+];
+
+const inicio = { x: 0, y: 3 };
+const destino = { x: 8, y: 3 };
+
+let jugador;
+let pasos;
+let terminado;
+let visitadas;
+
+function dibujar() {
+  const mapa = document.getElementById("mapa");
+  mapa.innerHTML = "";
+
+  for (let y = 0; y < 7; y++) {
+    for (let x = 0; x < 9; x++) {
+      const celda = document.createElement("div");
+      celda.className = "celda";
+
+      if (plano[y][x] === "#") {
+        celda.classList.add("pared");
+      } else if (x === jugador.x && y === jugador.y) {
+        celda.textContent = "Tú";
+        celda.classList.add("visitada");
+      } else if (x === inicio.x && y === inicio.y) {
+        celda.textContent = "🏡";
+        celda.classList.add("casa");
+      } else if (x === destino.x && y === destino.y) {
+        celda.textContent = "🏠";
+        celda.classList.add("casa");
+      } else if (visitadas.has(`${x},${y}`)) {
+        celda.textContent = "💖";
+        celda.classList.add("visitada");
+      }
+
+      mapa.appendChild(celda);
+    }
+  }
+}
+
+function mover(dx, dy) {
+  if (terminado) return;
+
+  const nx = jugador.x + dx;
+  const ny = jugador.y + dy;
+
+  if (nx < 0 || nx > 8 || ny < 0 || ny > 6) return;
+
+  if (plano[ny][nx] === "#") {
+    document.getElementById("mensaje-juego").textContent =
+      "Por ahí no se puede pasar. Prueba otro camino. 💖";
+    return;
+  }
+
+  visitadas.add(`${jugador.x},${jugador.y}`);
+  jugador = { x: nx, y: ny };
+  pasos++;
+
+  const mensaje = document.getElementById("mensaje-juego");
+
+  if (nx === destino.x && ny === destino.y) {
+    terminado = true;
+    mensaje.textContent =
+      "¡POR FIN JUNTOS! 💖 Si tuviera que recorrer mil caminos para encontrarte, te elegiría siempre. Mi lugar favorito es contigo. 💖";
+  } else {
+    mensaje.textContent =
+      `Llevas ${pasos} pasitos. ¡Sigue, que cada vez estás más cerca! 💖`;
+  }
+
+  dibujar();
+}
+
+function reiniciar() {
+  jugador = { ...inicio };
+  pasos = 0;
+  terminado = false;
+  visitadas = new Set();
+
+  document.getElementById("mensaje-juego").textContent =
+    "Encuentra el camino hasta mi casita. 💖";
+
+  dibujar();
+}
+
+// Teclado
+document.addEventListener("keydown", event => {
+  if (document.getElementById("juego").style.display === "none") return;
+
+  const teclas = {
+    ArrowUp: [0, -1],
+    ArrowDown: [0, 1],
+    ArrowLeft: [-1, 0],
+    ArrowRight: [1, 0]
+  };
+
+  if (teclas[event.key]) {
+    event.preventDefault();
+    mover(...teclas[event.key]);
+  }
+});
+
+reiniciar();
+</script>
+
+</body>
+</html>
